@@ -1,6 +1,7 @@
 const Chart = require('gdax-candles');
 const { Exchange, Broker, Order } = require('gdax-flash-limit');
 const fs = require('fs');
+require('dotenv').config();
 
 const credentials = {
   key: process.env.KEY,
@@ -27,10 +28,10 @@ let wasBullish, isBullish;
 let started = false;
 let position = null;
 let placed = false;
-let limitMargin = 1.004;
-let stopMargin = 1.002;
+let limitMargin = 1.0025;
+let stopMargin = 1.001;
 let margin = 0; 
-let size = 1;
+let size = 0.01;
 
 fs.openSync('results.txt', 'w');
 
