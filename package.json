@@ -11,7 +11,7 @@
   "dependencies": {
     "dotenv": "^6.2.0",
     "gdax-candles": "^1.6.5",
-    "gdax-flash-limit": "^1.0.1",
+    "gdax-flash-limit": "^1.0.3",
     "lodash": "^4.17.5"
   }
 }
