@@ -11,8 +11,8 @@
   "dependencies": {
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
-    "gdax-candles": "^1.6.5",
-    "gdax-flash-limit": "^1.0.3",
+    "gdax-candles": "^1.6.6",
+    "gdax-flash-limit": "^1.0.9",
     "lodash": "^4.17.5",
     "pg": "^7.8.1",
     "pg-hstore": "^2.3.2",

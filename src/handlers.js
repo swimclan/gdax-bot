@@ -136,8 +136,8 @@ module.exports = function getHandlers(options, broker) {
       }
     },
     
-    errorHandler(err) {
-      return console.log({error: err});
+    errorHandler(error) {
+      console.error(`gdax-bot - ${typeof error === 'object' ? JSON.stringify(error) : error}`);
     }
   }
 }
