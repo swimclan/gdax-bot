@@ -24,10 +24,10 @@ module.exports = function botstart() {
   .then(() => {
     broker.run();
     broker.on('fill', handlers.fillHandler);
-    broker.on('error', (error) => console.log(error));
+    broker.on('error', (error) => handlers.errorHandler(error, 'gdax-flash-limit'));
   });
   
   ethereumChart.on('change', handlers.changeHandler);
   ethereumChart.on('close', handlers.closeHandler);
-  ethereumChart.on('error', handlers.errorHandler);
+  ethereumChart.on('error', (error) => handlers.errorHandler(error, 'gdax-candles'));
 }

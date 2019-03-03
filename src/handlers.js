@@ -15,7 +15,8 @@ module.exports = function getHandlers(options, broker) {
     wasBullish
   } = Object.assign({}, options);
 
-  const History = getModel('history');
+  const HistoryModel = getModel('history');
+  const ErrorModel = getModel('error');
 
   const longTrend = function(candle) {
     let isLong = true;
@@ -30,7 +31,7 @@ module.exports = function getHandlers(options, broker) {
       ${new Date().toISOString()}
       BUY PLACED: ${candle.price}
     `);
-    History.create({
+    HistoryModel.create({
       side: 'buy',
       action: 'placed',
       price: candle.price,
@@ -47,7 +48,7 @@ module.exports = function getHandlers(options, broker) {
           ${new Date().toISOString()}
           LIMIT SELL PLACED: ${candle.price}\n
         `);
-        History.create({
+        HistoryModel.create({
           side: 'sell',
           action: 'placed',
           price: candle.price,
@@ -60,7 +61,7 @@ module.exports = function getHandlers(options, broker) {
           ${new Date().toISOString()}
           STOP SELL PLACED: ${candle.price}\n
         `);
-        History.create({
+        HistoryModel.create({
           side: 'sell',
           action: 'placed',
           price: candle.price,
@@ -82,7 +83,7 @@ module.exports = function getHandlers(options, broker) {
           ${new Date().toISOString()}
           BUY FILLED: ${order.price}
         `);
-        History.create({
+        HistoryModel.create({
           side: 'buy',
           action: 'filled',
           price: order.price,
@@ -95,7 +96,7 @@ module.exports = function getHandlers(options, broker) {
           ${new Date().toISOString()}
           SELL FILLED: ${order.price}\n
         `);
-        History.create({
+        HistoryModel.create({
           side: 'sell',
           action: 'filled',
           price: order.price,
@@ -136,8 +137,12 @@ module.exports = function getHandlers(options, broker) {
       }
     },
     
-    errorHandler(error) {
-      console.error(`gdax-bot - ${typeof error === 'object' ? JSON.stringify(error) : error}`);
+    errorHandler(error, sourceModule = 'gdax-bot') {
+      const message = `${sourceModule} - ${typeof error === 'object' ? JSON.stringify(error) : error}`;
+      ErrorModel.create({
+        message
+      });
+      console.error(message);
     }
   }
 }

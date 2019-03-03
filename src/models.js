@@ -9,13 +9,18 @@ const schemas = {
     action: {type: Sequelize.STRING},
     price: {type: Sequelize.FLOAT},
     type: {type: Sequelize.STRING}
+  },
+
+  error: {
+    id: {type: Sequelize.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true},
+    message: {type: Sequelize.STRING}
   }
 }
 
 module.exports = function getModel(name, sequelize) {
   if (!models[name]) {
     models[name] = sequelize.define(name, schemas[name]);
-    models[name].sync({force: true});
+    models[name].sync({force: process.env.NODE_ENV === 'development'});
   }
   return models[name];
 }
