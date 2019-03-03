@@ -25,8 +25,8 @@ app.get('/history', (req, res) => {
   });
 });
 
-app.get('/fills', (req, res) => {
-  HistoryModel.find({where: {action: 'filled'}}).then((data) => {
+app.get('/history/fills', (req, res) => {
+  HistoryModel.findAll({where: {action: 'filled'}}).then((data) => {
     res.json(data);
   });
 });
