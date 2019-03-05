@@ -69,7 +69,7 @@ module.exports = function getHandlers(state, broker) {
         });
         break;
     }
-    broker.queueOrder(new Order({product_id: product, size: state.size, side: 'sell'}));
+    broker.queueOrder(new Order({product_id: state.product, size: state.size, side: 'sell'}));
     state.set('placed', true);
   }
 
