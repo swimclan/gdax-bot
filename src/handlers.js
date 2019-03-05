@@ -1,26 +1,26 @@
 const {Order} = require('gdax-flash-limit');
 const getModel = require('./models');
 
-module.exports = function getHandlers(options, broker) {
-  let {
-    n,
-    product,
-    size,
-    periods,
-    position,
-    limitMargin,
-    stopMargin,
-    placed,
-    isBullish,
-    wasBullish
-  } = Object.assign({}, options);
+module.exports = function getHandlers(state, broker) {
+  // let {
+  //   n,
+  //   product,
+  //   size,
+  //   periods,
+  //   position,
+  //   limitMargin,
+  //   stopMargin,
+  //   placed,
+  //   isBullish,
+  //   wasBullish
+  // } = state;
 
   const HistoryModel = getModel('history');
   const ErrorModel = getModel('error');
 
   const longTrend = function(candle) {
     let isLong = true;
-    periods.forEach(period => {
+    state.periods.forEach(period => {
       isLong = isLong && candle.regression[period].slope > 0;
     });
     return isLong;
@@ -37,8 +37,8 @@ module.exports = function getHandlers(options, broker) {
       price: candle.price,
       type: 'limit'
     });
-    broker.queueOrder(new Order({ product_id: product, size, side: 'buy' }));
-    placed = true;
+    broker.queueOrder(new Order({ product_id: state.product, size: state.size, side: 'buy' }));
+    state.set('placed', true);
   }
   
   const sell = function(candle, type) {
@@ -69,16 +69,15 @@ module.exports = function getHandlers(options, broker) {
         });
         break;
     }
-    broker.queueOrder(new Order({product_id: product, size, side: 'sell'}));
-    placed = true;
+    broker.queueOrder(new Order({product_id: product, size: state.size, side: 'sell'}));
+    state.set('placed', true);
   }
 
   return {
     fillHandler(order) {
-      console.log('FILLED: ', order.status, order.side);
       if (order.status === 'filled' && order.side === 'buy') {
-        position = order;
-        placed = false;
+        state.set('position', order);
+        state.set('placed', false);
         console.log(`
           ${new Date().toISOString()}
           BUY FILLED: ${order.price}
@@ -90,8 +89,8 @@ module.exports = function getHandlers(options, broker) {
           type: null
         });
       } else if (order.status === 'filled' && order.side === 'sell') {
-        position = null;
-        placed = false;
+        state.set('position', null);
+        state.set('placed', false);
         console.log(`
           ${new Date().toISOString()}
           SELL FILLED: ${order.price}\n
@@ -105,34 +104,34 @@ module.exports = function getHandlers(options, broker) {
       }
     },
     changeHandler(candle) {
-      if (position && candle.price >= (position.price * limitMargin) && !placed) {
+      if (state.position && candle.price >= (state.position.price * state.limitMargin) && !state.placed) {
         sell(candle, 'limit');
-      } else if (position && candle.price <= (position.price / stopMargin) && !placed) {
+      } else if (state.position && candle.price <= (state.position.price / state.stopMargin) && !state.placed) {
         sell(candle, 'stop');
       }
     },
     
     closeHandler(candle) {
-      n++;
-      console.log(`n = ${n}`);
-      if (candle.ema[periods[periods.length-1]]) {
-        isBullish = candle.ema[periods[0]] > candle.ema[periods[periods.length-1]];
-        wasBullish = typeof wasBullish === 'undefined' ? isBullish : wasBullish;
+      state.set('n', state.n + 1);
+      console.log(`n = ${state.n}`);
+      if (candle.ema[state.periods[state.periods.length-1]]) {
+        state.set('isBullish', candle.ema[state.periods[0]] > candle.ema[state.periods[state.periods.length-1]]);
+        state.set('wasBullish', typeof state.wasBullish === 'undefined' ? state.isBullish : state.wasBullish);
         console.log(`
           ${new Date().toISOString()}
-          ${isBullish ? 'BULLISH' : 'BEARISH'}
+          ${state.isBullish ? 'BULLISH' : 'BEARISH'}
           LAST: ${candle.price}
-          EMA ${periods[0]}: ${candle.ema[periods[0]]}
-          EMA ${periods[periods.length-1]}: ${candle.ema[periods[periods.length-1]]}
-          POSITION: ${position ? position.price : 'none'}
-          LIMIT: ${position ? position.price * limitMargin : 'none'}
-          STOP: ${position ? position.price / stopMargin : 'none'}
+          EMA ${state.periods[0]}: ${candle.ema[state.periods[0]]}
+          EMA ${state.periods[state.periods.length-1]}: ${candle.ema[state.periods[state.periods.length-1]]}
+          POSITION: ${state.position ? state.position.price : 'none'}
+          LIMIT: ${state.position ? state.position.price * state.limitMargin : 'none'}
+          STOP: ${state.position ? state.position.price / state.stopMargin : 'none'}
         `);
-        if (isBullish && !wasBullish) {
+        if (state.isBullish && !state.wasBullish) {
           console.log('Crossover!');
-          !position && !placed && longTrend(candle) && buy(candle);
+          !state.position && !state.placed && longTrend(candle) && buy(candle);
         }
-        wasBullish = isBullish;
+        state.set('wasBullish', state.isBullish);
         console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
       }
     },

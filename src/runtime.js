@@ -3,10 +3,10 @@ const { Exchange, Broker } = require('gdax-flash-limit');
 const getHandlers = require('./handlers');
 const config = require('./config');
 
-module.exports = function botstart() {
+module.exports = function botstart(state) {
   const ethereumChart = new Chart({
-    product: config.product,
-    timeframe: config.timeframe
+    product: state.product,
+    timeframe: state.timeframe
   }).start();
   
   const exchange = new Exchange({
@@ -18,7 +18,7 @@ module.exports = function botstart() {
     exchange
   });
   
-  const handlers = getHandlers(config, broker);
+  const handlers = getHandlers(state, broker);
   
   exchange.run()
   .then(() => {

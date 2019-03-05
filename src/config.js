@@ -1,13 +1,13 @@
 module.exports = {
   product: 'ETH-USD',
-  timeframe: '10s',
+  timeframe: '30s',
   credentials: {
     key: process.env.KEY,
     secret: process.env.SECRET,
     passphrase: process.env.PASSPHRASE,
   },
   n: 0,
-  periods: [10, 20, 50, 100, 500],
+  periods: [10, 500],
   wasBullish: null,
   isBullish: null,
   started: false,
