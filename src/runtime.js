@@ -23,6 +23,7 @@ module.exports = function botstart(state) {
   exchange.run()
   .then(() => {
     broker.run();
+    broker.on('placed', handlers.placedHandler);
     broker.on('fill', handlers.fillHandler);
     broker.on('error', (error) => handlers.errorHandler(error, 'gdax-flash-limit'));
   });

@@ -22,9 +22,12 @@ class State {
     this.started = started;
     this.position = position;
     this.placed = placed;
+    this.placing = false;
     this.limitMargin = limitMargin;
     this.stopMargin = stopMargin;
     this.size = size;
+    this.candle = null;
+    this.sellType = null;
   }
 
   set(key, value) {
