@@ -25,9 +25,12 @@ class State {
     this.placing = false;
     this.limitMargin = limitMargin;
     this.stopMargin = stopMargin;
+    this.sellType = null;
+    this.limitPrice = null;
+    this.stopPrice = null;
+    this.bestPrice = 0;
     this.size = size;
     this.candle = null;
-    this.sellType = null;
   }
 
   set(key, value) {

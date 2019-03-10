@@ -13,7 +13,7 @@ module.exports = {
   started: false,
   position: null,
   placed: false,
-  limitMargin: 1.002,
+  limitMargin: 1.005,
   stopMargin: 1.001,
   size: 0.01
 }

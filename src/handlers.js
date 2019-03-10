@@ -74,6 +74,8 @@ module.exports = function getHandlers(state, broker) {
       if (order.status === 'filled' && order.side === 'buy') {
         state.set('position', order);
         state.set('placed', false);
+        state.set('bestPrice', order.price);
+        state.set('limitPrice', order.price * state.limitMargin);
         console.log(`
           ${new Date().toISOString()}
           BUY FILLED: ${order.price}
@@ -87,6 +89,9 @@ module.exports = function getHandlers(state, broker) {
       } else if (order.status === 'filled' && order.side === 'sell') {
         state.set('position', null);
         state.set('placed', false);
+        state.set('bestPrice', null);
+        state.set('limitPrice', null);
+        state.set('stopPrice', null);
         console.log(`
           ${new Date().toISOString()}
           SELL FILLED: ${order.price}\n
@@ -101,11 +106,16 @@ module.exports = function getHandlers(state, broker) {
     },
     changeHandler(candle) {
       state.set('candle', candle);
-      if (state.position && candle.price >= (state.position.price * state.limitMargin) && !state.placed) {
-        state.set('sellType', 'limit');
-        sell();
-      } else if (state.position && candle.price <= (state.position.price / state.stopMargin) && !state.placed) {
+      if (state.position && candle.price > state.bestPrice) {
+        state.set('bestPrice', candle.price);
+        state.set('stopPrice', state.bestPrice / state.stopMargin);
+      }
+
+      if (state.position && candle.price <= state.stopPrice && !state.placed) {
         state.set('sellType', 'stop');
+        sell();
+      } else if (state.position && candle.price >= state.limitPrice && !state.placed) {
+        state.set('sellType', 'limit');
         sell();
       }
     },
