@@ -32,12 +32,12 @@ module.exports = function getHandlers(state, broker) {
       if (order.side === 'buy') {
         console.log(`
           ${new Date().toISOString()}
-          BUY PLACED: ${state.candle.price}
+          BUY PLACED: ${order.price}\n
         `);
         HistoryModel.create({
           side: 'buy',
           action: 'placed',
-          price: state.candle.price,
+          price: order.price,
           type: 'limit'
         });
       } else {
@@ -45,12 +45,12 @@ module.exports = function getHandlers(state, broker) {
           case 'limit':
             console.log(`
               ${new Date().toISOString()}
-              LIMIT SELL PLACED: ${state.candle.price}\n
+              LIMIT SELL PLACED: ${order.price}\n
             `);
             HistoryModel.create({
               side: 'sell',
               action: 'placed',
-              price: state.candle.price,
+              price: order.price,
               type: 'limit'
             });
             break;
@@ -58,12 +58,12 @@ module.exports = function getHandlers(state, broker) {
           case 'stop':
             console.log(`
               ${new Date().toISOString()}
-              STOP SELL PLACED: ${state.candle.price}\n
+              STOP SELL PLACED: ${order.price}\n
             `);
             HistoryModel.create({
               side: 'sell',
               action: 'placed',
-              price: state.candle.price,
+              price: order.price,
               type: 'stop'
             });
             break;
