@@ -75,6 +75,7 @@ module.exports = function getHandlers(state, broker) {
         state.set('position', order);
         state.set('placed', false);
         state.set('bestPrice', order.price);
+        state.set('stopPrice', order.price / state.stopMargin);
         state.set('limitPrice', order.price * state.limitMargin);
         console.log(`
           ${new Date().toISOString()}
@@ -92,6 +93,7 @@ module.exports = function getHandlers(state, broker) {
         state.set('bestPrice', null);
         state.set('limitPrice', null);
         state.set('stopPrice', null);
+        state.set('sellType', null);
         console.log(`
           ${new Date().toISOString()}
           SELL FILLED: ${order.price}\n
