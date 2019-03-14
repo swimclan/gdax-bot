@@ -26,6 +26,7 @@ module.exports = function botstart(state) {
     broker.on('placed', handlers.placedHandler);
     broker.on('fill', handlers.fillHandler);
     broker.on('error', (error) => handlers.errorHandler(error, 'gdax-flash-limit'));
+    state.set('queue', broker.queues);
   });
   
   ethereumChart.on('change', handlers.changeHandler);

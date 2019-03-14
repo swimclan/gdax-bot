@@ -2,26 +2,20 @@ class State {
   constructor({
     product,
     timeframe,
-    n,
     periods,
-    wasBullish,
-    isBullish,
-    started,
-    position,
-    placed,
     limitMargin,
     stopMargin,
     size
   } = {}) {
     this.product = product;
     this.timeframe = timeframe;
-    this.n = n;
+    this.n = 0;
     this.periods = periods;
-    this.wasBullish = wasBullish;
-    this.isBullish = isBullish;
-    this.started = started;
-    this.position = position;
-    this.placed = placed;
+    this.wasBullish = null;
+    this.isBullish = null;
+    this.started = false;
+    this.position = null;
+    this.placed = false;
     this.placing = false;
     this.limitMargin = limitMargin;
     this.stopMargin = stopMargin;
@@ -30,6 +24,7 @@ class State {
     this.stopPrice = null;
     this.bestPrice = 0;
     this.size = size;
+    this.queue = {};
     this.candle = null;
   }
 
