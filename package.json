@@ -12,7 +12,7 @@
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "gdax-candles": "^1.7.0",
-    "gdax-flash-limit": "^1.0.11",
+    "gdax-flash-limit": "^1.1.1",
     "lodash": "^4.17.5",
     "pg": "^7.8.1",
     "pg-hstore": "^2.3.2",
