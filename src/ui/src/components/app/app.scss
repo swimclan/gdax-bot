@@ -1,15 +1,44 @@
+@import '../../globals/variables.scss';
+
 header.app-header {
   display: flex;
+  position: fixed;
+  top: 70px;
   justify-content: flex-end;
   background-color: #38343a;
   color: #fff;
 }
 
+button.app-refresh {
+  color: #fff;
+  background: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 3px;
+  transition: transform .1s;
+  &:active {
+    transform: scale(0.95);
+    background-color: $button-highlight;
+  }
+}
+
 section.app-body {
   display: grid;
   max-width: 1260px;
-  margin: 0 auto;
+  margin: 140px auto 0 auto;
   grid-gap: 20px 20px;
-  grid-template-columns: calc(25% - 20px) calc(25% - 20px) calc(25% - 20px) calc(25% - 20px);
+  grid-template-columns: 100%;
   padding: 20px;
+  @media screen and (min-width: $mobile-breakpoint) {
+    grid-template-columns: calc(50% - 10px) calc(50% - 10px);
+  }
+  @media screen and (min-width: $tablet-breakpoint) {
+    grid-template-columns: calc(33.33% - 13px) calc(33.33% - 13px) calc(33.33% - 13px);
+  }
+  @media screen and (min-width: $desktop-breakpoint) {
+    grid-template-columns: calc(25% - 16px) calc(25% - 16px) calc(25% - 16px) calc(25% - 16px);
+  }
+
 }

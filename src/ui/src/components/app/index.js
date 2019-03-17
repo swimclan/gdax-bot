@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import {refreshClicked, appMounted} from '../../actions';
 import Box from '../box';
-import {filterOutUnsoldBuys, sumSide} from '../../utils';
+import {
+  computeProfit,
+  computeProfitPercent} from '../../utils';
 import './app.scss';
 
 class App extends Component {
@@ -19,31 +21,133 @@ class App extends Component {
   }
   calculateOverallChange() {
     const { botState: { fills } } = this.props;
-    const countedFills = filterOutUnsoldBuys(fills);
-    const totalBuys = sumSide('buy', countedFills);
-    const totalSells = sumSide('sell', countedFills);
-    const percentChange = totalBuys ? ((totalSells - totalBuys) / totalBuys) * 100 : 0;
-    return percentChange.toFixed(2);
+    const profitPercent = computeProfitPercent(fills);
+    return profitPercent.toFixed(2);
   } 
+  calculateOverallProfit() {
+    const { botState: { fills } } = this.props;
+    const profit = computeProfit(fills);
+    return profit.toFixed(2);
+  }
+  getCurrentPosition() {
+    const { botState: { bot: { position } } } = this.props;
+    return position && position.price.toFixed(2);
+  }
+  getCurrentPrice() {
+    const { botState: { bot: { candle } } } = this.props;
+    return candle && candle.price ? candle.price.toFixed(2) : null;
+  }
+  getLimitPrice(type) {
+    const { botState: { bot: { limitPrice, stopPrice } } } = this.props;
+    if (!limitPrice && !stopPrice) {
+      return null;
+    }
+    return type === 'limit' ? limitPrice.toFixed(2) : stopPrice.toFixed(2);
+  }
+  getTradeSize() {
+    const { botState: { bot: { size } } } = this.props;
+    return size;
+  }
+  getMargin(type) {
+    const { botState: { bot: { limitMargin, stopMargin } } } = this.props;
+    const ret = type === 'limit' ? (limitMargin-1) * 100 : (stopMargin-1) * 100;
+    return ret.toFixed(2);
+  }
+  getCrossoverPeriods() {
+    const { botState: { bot: { periods } } } = this.props;
+    let ret = periods.reduce((acc, period) => {
+      return `${acc}${period},`
+    }, '');
+    return ret.slice(0, -1);
+  }
+  getProduct() {
+    const { botState: { bot: { product } } } = this.props;
+    return product;
+  }
+  getTimeframe() {
+    const { botState: { bot: { timeframe } } } = this.props;
+    return timeframe;
+  }
   render() {
+    const overallChange = this.calculateOverallChange();
+    const overallProfit = this.calculateOverallProfit();
+    const currentPosition = this.getCurrentPosition();
+    const currentPrice = this.getCurrentPrice();
+    const limitPrice = this.getLimitPrice('limit');
+    const stopPrice = this.getLimitPrice('stop');
+    const tradeSize = this.getTradeSize();
+    const limitMargin = this.getMargin('limit');
+    const stopMargin = this.getMargin('stop');
+    const periods = this.getCrossoverPeriods();
+    const product = this.getProduct();
+    const timeframe = this.getTimeframe();
     return (
       <div className="app-container">
         <header className="app-header">
-          <button onClick={this.props.onClickRefresh}>Refresh</button>
+          <button className="app-refresh" onClick={this.props.onClickRefresh}>Refresh</button>
         </header>
         <section className="app-body">
-          <Box title="Overall Change" body={`${this.calculateOverallChange()}%`} editable={false}/>
-          <Box title="Overall Profit" body="$2.68" editable={false}/>
-          <Box title="Current Position" body="$137.82" editable={false}/>
-          <Box title="Current Price" body="$137.89" editable={false}/>
-          <Box title="Limit Price" body="$138.62" editable={false}/>
-          <Box title="Stop Price" body="$137.08" editable={false}/>
-          <Box title="Trade Size" body="8" editable={true}/>
-          <Box title="Limit Margin" body="0.5%" editable={true}/>
-          <Box title="Stop Margin" body="0.1%" editable={true}/>
-          <Box title="Crossover Periods" body="50, 500" editable={true}/>
-          <Box title="Product" body="ETH-USD" editable={false}/>
-          <Box title="Timeframe" body="2s" editable={false}/>
+          <Box
+            title="Overall Change"
+            body={`${overallChange > 0 ? '+' : ''}${overallChange}%`}
+            editable={false}
+            color={overallChange >= 0 ? 'green' : 'red'}
+          />
+          <Box
+            title="Overall Profit"
+            body={`$${overallProfit}`}
+            editable={false}
+            color={overallProfit >= 0 ? 'green' : 'red'}
+          />
+          <Box
+            title="Current Position"
+            body={`$${currentPosition || '--'}`}
+            editable={false}
+          />
+          <Box
+            title="Current Price"
+            body={`$${currentPrice || '--'}`}
+            editable={false}
+          />
+          <Box
+            title="Limit Price"
+            body={`$${limitPrice || '--'}`}
+            editable={false}
+          />
+          <Box
+            title="Stop Price"
+            body={`$${stopPrice || '--'}`}
+            editable={false}/>
+          <Box
+            title="Trade Size"
+            body={`${tradeSize}`}
+            editable={true}
+          />
+          <Box 
+            title="Limit Margin"
+            body={`${limitMargin}%`}
+            editable={true}
+          />
+          <Box
+            title="Stop Margin"
+            body={`${stopMargin}%`}
+            editable={true}
+          />
+          <Box
+            title="Crossover Periods"
+            body={`${periods}`}
+            editable={true}
+          />
+          <Box
+            title="Product"
+            body={product}
+            editable={false}
+          />
+          <Box
+            title="Timeframe"
+            body={timeframe}
+            editable={false}
+          />
         </section>
         
 

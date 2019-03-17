@@ -12,14 +12,14 @@ class Box extends Component {
   }
 
   render() {
-    const { title, body, editable } = this.props;
+    const { title, body, editable, color } = this.props;
     return (
       <article className="box-container">
         <section className="box-title-section">
           <span className="box-title">{title}</span>
         </section>
         <section className="box-data-section">
-          <span className="box-data">{body}</span>
+          <span className="box-data" style={color && {color}}>{body}</span>
         </section>
         <section className="box-action-section">
           {editable &&<button className="box-action-button">Edit</button>}
@@ -32,7 +32,8 @@ class Box extends Component {
 Box.propTypes = {
   title: PropTypes.string,
   body: PropTypes.string,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
+  color: PropTypes.string
 }
 
 // const mapDispatchToProps = (dispatch, ownProps) => {
