@@ -1,0 +1,30 @@
+article.box-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  height: 200px;
+  background-color: white;
+  -webkit-box-shadow: 10px 10px 23px -12px rgba(227,227,227,1);
+  -moz-box-shadow: 10px 10px 23px -12px rgba(227,227,227,1);
+  box-shadow: 10px 10px 23px -12px rgba(227,227,227,1);
+}
+
+section.box-action-section {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+span.box-title {
+  color: #bbb;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  font-weight: 200;
+}
+
+span.box-data {
+  font-weight: 900;
+  font-size: 4em;
+}

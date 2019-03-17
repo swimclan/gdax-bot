@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const path = require('path');
 const botstart = require('./src/runtime');
 const db = require('./src/db');
 const getModel = require('./src/models');
@@ -9,6 +10,12 @@ const app = express();
 const HistoryModel = getModel('history', db);
 const ErrorModel = getModel('error', db);
 const config = require('./src/config');
+
+app.use('/static', express.static(path.join(__dirname, './src/public')))
+
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/src/views'));
 
 const state = getState(config);
 botstart(state);
@@ -24,29 +31,33 @@ db
 
 app.use(bodyParser.json());
 
-app.get('/history', (req, res) => {
+app.get('/', (req, res) => {
+  res.render('index');
+});
+
+app.get('/api/history', (req, res) => {
   HistoryModel.findAll().then((data) => {
     res.json(data);
   });
 });
 
-app.get('/history/fills', (req, res) => {
+app.get('/api/history/fills', (req, res) => {
   HistoryModel.findAll({where: {action: 'filled'}}).then((data) => {
     res.json(data);
   });
 });
 
-app.get('/error', (req, res) => {
+app.get('/api/error', (req, res) => {
   ErrorModel.findAll().then((data) => {
     res.json(data);
   });
 });
 
-app.get('/state', (req, res) => {
+app.get('/api/state', (req, res) => {
   res.json(state);
 });
 
-app.patch('/state', (req, res) => {
+app.patch('/api/state', (req, res) => {
   Object.entries(req.body).forEach(([property, value]) => {
     state.set(property, value);
   });
