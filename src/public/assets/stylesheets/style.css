@@ -5,7 +5,7 @@ body {font: 13px Helmet, Freesans, sans-serif;}
 
 /* We like off-black for text. */
 body, select, input, textarea {
-  background-color: #efefef;
+  background-color: #dedae0;
   font-family: 'Muli', sans-serif;
   color: #333;
 }
@@ -37,7 +37,7 @@ header, footer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background-color: #333;
+  background-color: #1f1d20;
   color: #fff;
   font-size: 2em;
   font-weight: bold;
