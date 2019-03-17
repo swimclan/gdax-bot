@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd ./src/ui && npx webpack && cp -r ./dist/bundle.js ../public/assets/js/ && cd ../.. && nodemon index.js"
   },
   "author": "Matthew Herron",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^6.2.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
     "gdax-candles": "^1.7.1",
     "gdax-flash-limit": "^1.1.2",
@@ -17,5 +19,8 @@
     "pg": "^7.8.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.42.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
