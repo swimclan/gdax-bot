@@ -18,9 +18,15 @@ button.app-refresh {
   padding: 8px;
   border-radius: 3px;
   transition: transform .1s;
+  font-size: 0.6em;
   &:active {
     transform: scale(0.95);
     background-color: $button-highlight;
+  }
+  &::before {
+    font-family: FontAwesome;
+    content: '\f021';
+    margin: 0 3px;
   }
 }
 

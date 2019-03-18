@@ -8,7 +8,6 @@ import {botState} from './reducers';
 import App from './components/app';
 import rootSaga from './sagas';
 
-
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(
   botState,

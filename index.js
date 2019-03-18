@@ -12,7 +12,14 @@ const ErrorModel = getModel('error', db);
 const config = require('./src/config');
 
 app.use('/static', express.static(path.join(__dirname, './src/public')))
-
+app.use('/', (req, res, next) => {
+  const reqUrl = req.originalUrl;
+  if (reqUrl.match(/(woff2?|ttf)/)) {
+    res.redirect(`/static/assets/fonts${reqUrl}`);
+  } else {
+    next();
+  }
+});
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/src/views'));

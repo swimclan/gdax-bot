@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd ./src/ui && yes | sh ./src/scripts/build.sh && cp -r ./dist/bundle.js ../public/assets/js/ && cd ../.. && nodemon index.js"
+    "start": "cd ./src/ui && yes | sh ./src/scripts/build.sh && cp -r ./dist/bundle.js ../public/assets/js/ && cp -r ./dist/*.woff ../public/assets/fonts/ && cp -r ./dist/*.woff2 ../public/assets/fonts/ && cp -r ./dist/*.ttf ../public/assets/fonts/ && cd ../.. && nodemon index.js"
   },
   "author": "Matthew Herron",
   "license": "ISC",

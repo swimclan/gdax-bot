@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect, mapDispatchToProps } from 'react-redux';
+import 'font-awesome/scss/font-awesome.scss';
 import './box.scss';
 
 class Box extends Component {

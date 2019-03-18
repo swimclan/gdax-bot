@@ -4,14 +4,11 @@ module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
   module: {
     rules: [
-      {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: ['url-loader?limit=10000&mimetype=application/font-woff']
-      },
-      {
-        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: ['file-loader']
-      },
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, use: ['file-loader?mimetype=image/svg+xml']},
+      {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, use: ['file-loader?mimetype=application/font-woff']},
+      {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, use: ['file-loader?mimetype=application/font-woff']},
+      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use: ['file-loader?mimetype=application/octet-stream']},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, use: ['file-loader']},
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -30,16 +27,12 @@ module.exports = {
   mode: 'development',
   devtool: 'eval-source-map',
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
+    modules: ['node_modules']
   },
   output: {
     path: __dirname + '/dist',
     publicPath: '/',
     filename: 'bundle.js'
-  },
-  resolve: {
-    alias: {
-      '~': path.resolve(__dirname, 'node_modules')
-    }
   }
 };
