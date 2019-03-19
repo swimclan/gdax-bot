@@ -1,11 +1,11 @@
 export const filterOutUnsoldBuys = (fills) => {
   let buys = [];
   let ret = [];
-  for (const fill in fills) {
-    if (fill.side === 'buy') {
-      buys.push(fill);
-    } else if (fill.side === 'sell') {
-      ret = [...ret, ...buys, fill];
+  for (const i in fills) {
+    if (fills[i].side === 'buy') {
+      buys.push(fills[i]);
+    } else if (fills[i].side === 'sell') {
+      ret = [...ret, ...buys, fills[i]];
       buys = [];
     }
   }
