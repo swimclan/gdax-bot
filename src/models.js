@@ -9,7 +9,8 @@ const schemas = {
     action: {type: Sequelize.STRING},
     price: {type: Sequelize.FLOAT},
     type: {type: Sequelize.STRING},
-    size: {type: Sequelize.FLOAT}
+    size: {type: Sequelize.FLOAT},
+    fee: {type: Sequelize.FLOAT}
   },
 
   error: {

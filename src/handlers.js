@@ -39,7 +39,8 @@ module.exports = function getHandlers(state, broker) {
           action: 'placed',
           price: order.price,
           type: 'limit',
-          size: order.size
+          size: order.remaining,
+          fee: order.fee
         });
       } else {
         switch(state.sellType) {
@@ -53,7 +54,8 @@ module.exports = function getHandlers(state, broker) {
               action: 'placed',
               price: order.price,
               type: 'limit',
-              size: order.size
+              size: order.remaining,
+              fee: order.fee
             });
             break;
       
@@ -67,7 +69,8 @@ module.exports = function getHandlers(state, broker) {
               action: 'placed',
               price: order.price,
               type: 'stop',
-              size: order.size
+              size: order.remaining,
+              fee: order.fee
             });
             break;
         }
@@ -89,7 +92,8 @@ module.exports = function getHandlers(state, broker) {
           action: 'filled',
           price: order.price,
           type: null,
-          size: state.size - order.size
+          size: state.remaining,
+          fee: order.fee
         });
       } else if (order.status === 'filled' && order.side === 'sell') {
         state.set('position', null);
@@ -107,7 +111,8 @@ module.exports = function getHandlers(state, broker) {
           action: 'filled',
           price: order.price,
           type: null,
-          size: state.size - order.size
+          size: state.remaining,
+          fee: order.fee
         });
       }
     },
