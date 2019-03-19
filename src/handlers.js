@@ -92,7 +92,7 @@ module.exports = function getHandlers(state, broker) {
           action: 'filled',
           price: order.price,
           type: null,
-          size: state.remaining,
+          size: order.remaining,
           fee: order.fee
         });
       } else if (order.status === 'filled' && order.side === 'sell') {
@@ -111,7 +111,7 @@ module.exports = function getHandlers(state, broker) {
           action: 'filled',
           price: order.price,
           type: null,
-          size: state.remaining,
+          size: order.remaining,
           fee: order.fee
         });
       }
