@@ -1,11 +1,15 @@
 export const filterOutUnsoldBuys = (fills) => {
-  let filtered = [];
-  for (const i in fills) {
-    if (fills[i].side === 'buy' && fills[+i+1] && fills[+i+1].side === 'sell') {
-      filtered = [...filtered, fills[i], fills[+i+1]];
+  let buys = [];
+  let ret = [];
+  for (const fill in fills) {
+    if (fill.side === 'buy') {
+      buys.push(fill);
+    } else if (fill.side === 'sell') {
+      ret = [...ret, ...buys, fill];
+      buys = [];
     }
   }
-  return filtered;
+  return ret;
 }
 
 export const sumSide = (side, fills) => {
