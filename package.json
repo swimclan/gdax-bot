@@ -14,7 +14,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "gdax-candles": "^1.7.1",
-    "gdax-flash-limit": "^1.2.1",
+    "gdax-flash-limit": "^1.2.2",
     "lodash": "^4.17.5",
     "pg": "^7.8.1",
     "pg-hstore": "^2.3.2",
