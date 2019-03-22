@@ -7,7 +7,7 @@ module.exports = {
     passphrase: process.env.PASSPHRASE,
   },
   periods: [10, 200],
-  limitMargin: 1.0001,
-  stopMargin: 1.0001,
+  limitMargin: 1.01,
+  stopMargin: 1.002,
   size: 5
 }
