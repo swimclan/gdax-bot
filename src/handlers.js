@@ -30,88 +30,57 @@ module.exports = function getHandlers(state, broker) {
       state.set('placing', false);
       state.set('placed', true);
       if (order.side === 'buy') {
-        console.log(`
-          ${new Date().toISOString()}
-          BUY PLACED: ${order.price}\n
-        `);
         HistoryModel.create({
           side: 'buy',
           action: 'placed',
           price: order.price,
-          type: 'limit',
+          remaining: order.remaining,
           size: order.size,
           fee: order.fee
         });
       } else {
-        switch(state.sellType) {
-          case 'limit':
-            console.log(`
-              ${new Date().toISOString()}
-              LIMIT SELL PLACED: ${order.price}\n
-            `);
-            HistoryModel.create({
-              side: 'sell',
-              action: 'placed',
-              price: order.price,
-              type: 'limit',
-              size: order.size,
-              fee: order.fee
-            });
-            break;
-      
-          case 'stop':
-            console.log(`
-              ${new Date().toISOString()}
-              STOP SELL PLACED: ${order.price}\n
-            `);
-            HistoryModel.create({
-              side: 'sell',
-              action: 'placed',
-              price: order.price,
-              type: 'stop',
-              size: order.size,
-              fee: order.fee
-            });
-            break;
-        }
-      }
-    },
-    fillHandler(order) {
-      if (order.status === 'filled' && order.side === 'buy') {
-        state.set('position', order);
-        state.set('placed', false);
-        state.set('bestPrice', order.price);
-        state.set('stopPrice', order.price / state.stopMargin);
-        state.set('limitPrice', order.price * state.limitMargin);
-        console.log(`
-          ${new Date().toISOString()}
-          BUY FILLED: ${order.price}
-        `);
         HistoryModel.create({
-          side: 'buy',
-          action: 'filled',
+          side: 'sell',
+          action: 'placed',
           price: order.price,
-          type: null,
+          remaining: order.remaining,
           size: order.size,
           fee: order.fee
         });
-      } else if (order.status === 'filled' && order.side === 'sell') {
-        state.set('position', null);
-        state.set('placed', false);
-        state.set('bestPrice', null);
-        state.set('limitPrice', null);
-        state.set('stopPrice', null);
-        state.set('sellType', null);
-        console.log(`
-          ${new Date().toISOString()}
-          SELL FILLED: ${order.price}\n
-        `);
+      }
+    },
+    fillHandler(order) {
+      if (order.side === 'buy') {
+        if (order.status === 'filled') {
+          state.set('position', order);
+          state.set('placed', false);
+          state.set('bestPrice', order.price);
+          state.set('stopPrice', order.price / state.stopMargin);
+          state.set('limitPrice', order.price * state.limitMargin);
+        }
+        HistoryModel.create({
+          side: 'buy',
+          action: 'fill',
+          price: order.price,
+          remaining: order.remaining,
+          size: order.lastFillSize,
+          fee: order.fee
+        });
+      } else if (order.side === 'sell') {
+        if (order.status === 'filled') {
+          state.set('position', null);
+          state.set('placed', false);
+          state.set('bestPrice', null);
+          state.set('limitPrice', null);
+          state.set('stopPrice', null);
+          state.set('sellType', null);
+        }
         HistoryModel.create({
           side: 'sell',
-          action: 'filled',
+          action: 'fill',
           price: order.price,
-          type: null,
-          size: order.size,
+          remaining: order.remaining,
+          size: order.lastFillSize,
           fee: order.fee
         });
       }

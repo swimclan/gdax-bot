@@ -8,7 +8,7 @@ const schemas = {
     side: {type: Sequelize.STRING},
     action: {type: Sequelize.STRING},
     price: {type: Sequelize.FLOAT},
-    type: {type: Sequelize.STRING},
+    remaining: {type: Sequelize.FLOAT},
     size: {type: Sequelize.FLOAT},
     fee: {type: Sequelize.FLOAT}
   },
