@@ -49,7 +49,7 @@ app.get('/api/history', (req, res) => {
 });
 
 app.get('/api/history/fills', (req, res) => {
-  HistoryModel.findAll({where: {action: 'filled'}}).then((data) => {
+  HistoryModel.findAll({where: {action: 'fill'}}).then((data) => {
     res.json(data);
   });
 });
