@@ -23,3 +23,15 @@ export const fetchFills = () => {
     });
   });
 }
+
+export const patchBotState = (options) => {
+  return new Promise((resolve, reject) => {
+    axios.patch('/api/state', options)
+    .then(response => {
+      resolve(response);
+    })
+    .catch(error => {
+      reject(error);
+    });
+  });
+}

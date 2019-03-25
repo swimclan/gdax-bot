@@ -35,3 +35,15 @@ export const computeProfitPercent = (fills) => {
   const percentProfit = totalBuys ? (totalProfit / totalBuys) * 100 : 0;
   return percentProfit;
 }
+
+export const parsePercentFromString = (s) => {
+  const splitStr = s.split('');
+  const filteredNonNumericChars = splitStr.filter(char => !isNaN(parseInt(char)) || char === '.');
+  const joinedFloatString = filteredNonNumericChars.join('');
+  return parseFloat(joinedFloatString) / 100;
+}
+
+export const parsePeriodsValuesFromString = (s) => {
+  const arrVals = s.split(',');
+  return arrVals.map(val => parseInt(val));
+}

@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-import {refreshClicked, appMounted} from '../../actions';
+import {refreshClicked, appMounted, updateBotState} from '../../actions';
 import Box from '../box';
 import {
   computeProfit,
-  computeProfitPercent} from '../../utils';
+  computeProfitPercent,
+  parsePercentFromString,
+  parsePeriodsValuesFromString} from '../../utils';
 import './app.scss';
 
 class App extends Component {
@@ -15,6 +17,10 @@ class App extends Component {
       overallPercent: 0,
       overallProfit: 0
     }
+    this.onChangeSize = this.onChangeSize.bind(this);
+    this.onChangeLimitMargin = this.onChangeLimitMargin.bind(this);
+    this.onChangeStopMargin = this.onChangeStopMargin.bind(this);
+    this.onChangeCrossoverPeriods = this.onChangeCrossoverPeriods.bind(this);
   }
   componentDidMount() {
     this.props.onAppMounted();
@@ -67,6 +73,26 @@ class App extends Component {
   getTimeframe() {
     const { botState: { bot: { timeframe } } } = this.props;
     return timeframe;
+  }
+
+  onChangeSize(size) {
+    const { onBoxUpdate } = this.props;
+    onBoxUpdate({size: +size})
+  }
+
+  onChangeLimitMargin(marginString) {
+    const { onBoxUpdate } = this.props;
+    onBoxUpdate({limitMargin: 1 + parsePercentFromString(marginString)});
+  }
+
+  onChangeStopMargin(marginString) {
+    const { onBoxUpdate } = this.props;
+    onBoxUpdate({stopMargin: 1 + parsePercentFromString(marginString)});
+  }
+
+  onChangeCrossoverPeriods(periodsString) {
+    const { onBoxUpdate } = this.props;
+    onBoxUpdate({periods: parsePeriodsValuesFromString(periodsString)});
   }
   render() {
     const overallChange = this.calculateOverallChange();
@@ -122,21 +148,25 @@ class App extends Component {
             title="Trade Size"
             body={`${tradeSize}`}
             editable={true}
+            onEdit={this.onChangeSize}
           />
           <Box 
             title="Limit Margin"
             body={`${limitMargin}%`}
             editable={true}
+            onEdit={this.onChangeLimitMargin}
           />
           <Box
             title="Stop Margin"
             body={`${stopMargin}%`}
             editable={true}
+            onEdit={this.onChangeStopMargin}
           />
           <Box
             title="Crossover Periods"
             body={`${periods}`}
             editable={true}
+            onEdit={this.onChangeCrossoverPeriods}
           />
           <Box
             title="Product"
@@ -173,6 +203,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onClickRefresh: () => {
       dispatch(refreshClicked())
+    },
+    onBoxUpdate: (options) => {
+      dispatch(updateBotState(options));
     }
   }
 }
