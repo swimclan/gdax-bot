@@ -22,6 +22,10 @@ module.exports = function botstart(state) {
   
   exchange.run()
   .then(() => {
+    setInterval(() => {
+      state.set('exchangeSocket', exchange.websocket.socket.readyState);
+      state.set('orderbookSocket', exchange.orderbooks[state.product] ? exchange.orderbooks[state.product].websocket.socket.readyState : null);
+    }, (60000));
     broker.run();
     broker.on('placed', handlers.placedHandler);
     broker.on('fill', handlers.fillHandler);

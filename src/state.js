@@ -26,6 +26,8 @@ class State {
     this.size = size;
     this.queue = {};
     this.candle = null;
+    this.exchangeSocket = null;
+    this.orderbookSocket = null;
   }
 
   set(key, value) {
