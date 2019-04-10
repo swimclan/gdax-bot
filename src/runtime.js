@@ -23,7 +23,8 @@ module.exports = function botstart(state) {
   exchange.run()
   .then(() => {
     setInterval(() => {
-      const orderbookSocket = exchange.orderbooks[state.product].websocket.socket;
+      const orderbook = exchange.orderbooks[state.product];
+      const orderbookSocket = orderbook ? orderbook.websocket.socket : null;
       const exchangeSocket = exchange.websocket.socket; 
       exchangeSocket && state.set('exchangeSocket', exchangeSocket.readyState);
       orderbookSocket && state.set('orderbookSocket', ordebookSocket.readyState);
