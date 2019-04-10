@@ -23,8 +23,10 @@ module.exports = function botstart(state) {
   exchange.run()
   .then(() => {
     setInterval(() => {
-      state.set('exchangeSocket', exchange.websocket.socket.readyState);
-      state.set('orderbookSocket', exchange.orderbooks[state.product] ? exchange.orderbooks[state.product].websocket.socket.readyState : null);
+      const orderbookSocket = exchange.orderbooks[state.product].websocket.socket;
+      const exchangeSocket = exchange.websocket.socket; 
+      exchangeSocket && state.set('exchangeSocket', exchangeSocket.readyState);
+      orderbookSocket && state.set('orderbookSocket', ordebookSocket.readyState);
     }, (60000));
     broker.run();
     broker.on('placed', handlers.placedHandler);
