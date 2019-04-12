@@ -27,7 +27,7 @@ module.exports = function botstart(state) {
       const orderbookSocket = orderbook ? orderbook.websocket.socket : null;
       const exchangeSocket = exchange.websocket.socket; 
       exchangeSocket && state.set('exchangeSocket', exchangeSocket.readyState);
-      orderbookSocket && state.set('orderbookSocket', ordebookSocket.readyState);
+      orderbookSocket && state.set('orderbookSocket', orderbookSocket.readyState);
     }, (60000));
     broker.run();
     broker.on('placed', handlers.placedHandler);
